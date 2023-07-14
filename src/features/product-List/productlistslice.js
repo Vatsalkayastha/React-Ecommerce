@@ -3,6 +3,8 @@ import { fetchAllProducts,fetchProductsByFilters } from './ProductListApi';
 
 const initialState = {
   products: [],
+  categories: [],
+  brands: [],
   status: 'idle',
   totalItems: 0
 };
@@ -60,5 +62,7 @@ export const { increment } = productSlice.actions;
 
 export const selectAllProducts = (state) => state.product.products;
 export const selectTotalItems = (state) => state.product.totalItems;
+export const selectBrands = (state) => state.product.brands;
+export const selectCategories = (state) => state.product.categories;
 
 export default productSlice.reducer;
