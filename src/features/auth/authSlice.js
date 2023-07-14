@@ -1,21 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchCount } from './authAPI';
-
+import { CreateUser,CheckUser } from './authAPI';
+ 
 const initialState = {
-  value: 0,
+  loggedInUser: null,
   status: 'idle',
+  error: null
 };
 
-export const incrementAsync = createAsyncThunk(
-  'counter/fetchCount',
-  async (amount) => {
-    const response = await fetchCount(amount);
+export const CreateUserAsync = createAsyncThunk(
+  'user/CreateUser',
+  async (userData) => {
+    const response = await CreateUser(userData);
+    return response.data;
+  }
+);
+export const CheckUserAsync = createAsyncThunk(
+  'user/CheckUser',
+  async (loginInfo) => {
+    const response = await CheckUser(loginInfo);
     return response.data;
   }
 );
 
 export const counterSlice = createSlice({
-  name: 'counter',
+  name: 'user',
   initialState,
   reducers: {
     increment: (state) => {
@@ -24,17 +32,32 @@ export const counterSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(incrementAsync.pending, (state) => {
+      .addCase(CreateUserAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(incrementAsync.fulfilled, (state, action) => {
+      .addCase(CreateUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.value += action.payload;
-      });
+        state.loggedInUser = action.payload;
+      })
+      .addCase(CheckUserAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(CheckUserAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.loggedInUser = action.payload;
+      })
+      .addCase(CheckUserAsync.rejected, (state, action) => {
+        state.status = 'idle';
+        state.error = action.error;
+      })
+      
+      ;
   },
 });
 
 export const {increment} = counterSlice.actions;
+export const selectLoggedInUser = (state) => state.auth.loggedInUser;
+export const selectError = (state) => state.auth.error;
 
 export const selectCount = (state) => state.counter.value;
 
