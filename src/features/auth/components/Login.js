@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CreateUserAsync, selectLoggedInUser,CheckUserAsync, selectError  } from "../authSlice";
-import { useForm } from "react-hook-form";
+import { increment, incrementAsync, selectError, selectLoggedInUser } from '../authSlice';
 import { Link, Navigate } from 'react-router-dom';
+import { checkUserAsync } from '../authSlice';
+import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const user = useSelector(selectLoggedInUser)
@@ -25,14 +26,17 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form noValidate
+        <form
+            noValidate
+            onSubmit={handleSubmit((data) => {
+              dispatch(
+                checkUserAsync({ email: data.email, password: data.password })
+              );
+            })}
             className="space-y-6"
             action="#"
             method="POST"
-            onSubmit={handleSubmit((data) => {
-              dispatch(CheckUserAsync({email:data.email, password:data.password}))
-              console.log(data);
-            })}>
+          >
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
@@ -79,9 +83,12 @@ export default function Login() {
                   
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                 {errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}
               </div>
-              {errors.password && (
-                  <p className="text-red-500">{errors.email.password}</p>
+              {error && (
+                  <p className="text-red-500">{error.message}</p>
                 )}
             </div>
 

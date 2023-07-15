@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { CreateUserAsync, selectLoggedInUser } from "../authSlice";
-import { Link, Navigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
+
+import { selectLoggedInUser, createUserAsync } from '../authSlice';
+import { Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 
 export default function Signup() {
@@ -31,13 +33,13 @@ export default function Signup() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form
+        <form
             noValidate
             className="space-y-6"
-            action="#"
-            method="POST"
             onSubmit={handleSubmit((data) => {
-              dispatch(CreateUserAsync({email:data.email, password:data.password}))
+              dispatch(
+                createUserAsync({ email: data.email, password: data.password })
+              );
               console.log(data);
             })}
           >
@@ -84,7 +86,7 @@ export default function Signup() {
                     pattern: {
                       value:
                         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
-                      message: `- at least 8 characters \n
+                      message: `- at least 8 characters\n
                       - must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number\n
                       - Can contain special characters`,
                     },

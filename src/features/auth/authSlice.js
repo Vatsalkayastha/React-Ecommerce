@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { CreateUser,CheckUser } from './authAPI';
+import { createUser,checkUser } from './authAPI';
  
 const initialState = {
   loggedInUser: null,
@@ -7,17 +7,17 @@ const initialState = {
   error: null
 };
 
-export const CreateUserAsync = createAsyncThunk(
-  'user/CreateUser',
+export const createUserAsync = createAsyncThunk(
+  'user/createUser',
   async (userData) => {
-    const response = await CreateUser(userData);
+    const response = await createUser(userData);
     return response.data;
   }
 );
-export const CheckUserAsync = createAsyncThunk(
-  'user/CheckUser',
+export const checkUserAsync = createAsyncThunk(
+  'user/checkUser',
   async (loginInfo) => {
-    const response = await CheckUser(loginInfo);
+    const response = await checkUser(loginInfo);
     return response.data;
   }
 );
@@ -32,21 +32,21 @@ export const counterSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(CreateUserAsync.pending, (state) => {
+      .addCase(createUserAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(CreateUserAsync.fulfilled, (state, action) => {
+      .addCase(createUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         state.loggedInUser = action.payload;
       })
-      .addCase(CheckUserAsync.pending, (state) => {
+      .addCase(checkUserAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(CheckUserAsync.fulfilled, (state, action) => {
+      .addCase(checkUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         state.loggedInUser = action.payload;
       })
-      .addCase(CheckUserAsync.rejected, (state, action) => {
+      .addCase(checkUserAsync.rejected, (state, action) => {
         state.status = 'idle';
         state.error = action.error;
       })
@@ -56,8 +56,8 @@ export const counterSlice = createSlice({
 });
 
 export const {increment} = counterSlice.actions;
-export const selectLoggedInUser = (state) => state.auth.loggedInUser;
-export const selectError = (state) => state.auth.error;
+export const selectLoggedInUser = (state)=>state.auth.loggedInUser;
+export const selectError = (state)=>state.auth.error;
 
 export const selectCount = (state) => state.counter.value;
 
